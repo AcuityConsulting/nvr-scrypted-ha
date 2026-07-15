@@ -1,10 +1,11 @@
 {
   "domain": "acuity_nvr",
   "name": "Acuity NVR",
-  "codeowners": ["@escarsega"],
+  "codeowners": ["@AcuityConsulting"],
   "config_flow": true,
   "dependencies": ["media_source"],
-  "documentation": "https://github.com/escarsega/acuity-nvr-ha",
+  "documentation": "https://github.com/AcuityConsulting/nvr-scrypted-ha",
+  "issue_tracker": "https://github.com/AcuityConsulting/nvr-scrypted-ha/issues",
   "integration_type": "hub",
   "iot_class": "local_polling",
   "requirements": [],

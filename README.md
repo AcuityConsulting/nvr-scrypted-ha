@@ -35,9 +35,9 @@ directory (create it if needed), then restart Home Assistant.
 
 ### Option B: HACS custom repository
 
-HACS installs only from **public GitHub** repositories. If this repo is
-mirrored to GitHub: HACS → Integrations → ⋮ → *Custom repositories* → paste
-the GitHub URL, category *Integration* → install → restart HA.
+HACS → Integrations → ⋮ → *Custom repositories* → paste
+`https://github.com/AcuityConsulting/nvr-scrypted-ha`, category
+*Integration* → install → restart HA.
 
 ## Setup
 
