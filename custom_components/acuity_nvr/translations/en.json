@@ -3,17 +3,18 @@
     "step": {
       "user": {
         "title": "Connect to Acuity NVR",
-        "description": "Enter the address of the Acuity NVR standalone server (the Scrypted host, port 10444 by default).",
+        "description": "Enter the NVR URL. Recommended: the token-gated Scrypted endpoint, e.g. `https://scrypted.example.com/endpoint/@acuity/nvr/public` (requires the API Token set in the plugin). Alternative: the standalone server, e.g. `https://<host>:10444` (turn off certificate verification for Scrypted's self-signed cert).",
         "data": {
-          "host": "Host",
-          "port": "Port",
-          "use_ssl": "Use HTTPS",
+          "url": "NVR URL",
+          "api_token": "API token (from the plugin's Network settings)",
           "verify_ssl": "Verify SSL certificate"
         }
       }
     },
     "error": {
-      "cannot_connect": "Could not reach the NVR. Check the host/port and that the standalone server is enabled in the plugin settings."
+      "cannot_connect": "Could not reach the NVR. Check the URL and that the plugin is running.",
+      "invalid_auth": "The NVR rejected the API token. Check the API Token setting in the plugin.",
+      "invalid_url": "Enter a full URL starting with http:// or https://."
     },
     "abort": {
       "already_configured": "This NVR is already configured."

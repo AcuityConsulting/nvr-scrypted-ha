@@ -17,14 +17,19 @@ Connects Home Assistant to an [Acuity NVR](https://www.npmjs.com/package/@acuity
 
 ## Requirements
 
-- Acuity NVR plugin **v0.4.11 or newer** running in Scrypted
-- The plugin's **standalone server enabled** (default port 10444 — see the
-  plugin's Network settings)
+- Acuity NVR plugin **v0.5.0 or newer** running in Scrypted
+- An **API Token** set in the plugin's Network settings (recommended)
 - Home Assistant **2024.6** or newer
-- HA must be able to reach the Scrypted host on the standalone port
 
-> **Security note:** the standalone server is unauthenticated. Keep port
-> 10444 restricted to your trusted LAN.
+Two ways for HA to reach the NVR:
+
+1. **Scrypted public endpoint (recommended)** — works through your SSL
+   reverse proxy with a real certificate:
+   `https://<scrypted-host>/endpoint/@acuity/nvr/public` + the API token.
+2. **Standalone server** — `https://<host>:10444`. Uses Scrypted's
+   self-signed cert by default (disable *Verify SSL certificate*), or set
+   custom cert paths in the plugin. When an API token is configured, the
+   standalone API requires it too.
 
 ## Installation
 
@@ -43,8 +48,9 @@ HACS → Integrations → ⋮ → *Custom repositories* → paste
 
 *Settings → Devices & Services → Add Integration → **Acuity NVR***
 
-Enter the Scrypted host and standalone port (10444). Leave **Verify SSL
-certificate** off — the standalone server uses Scrypted's self-signed cert.
+Enter the NVR URL (one of the two forms above) and the API token. Keep
+**Verify SSL certificate** on for a reverse-proxied URL with a real cert;
+turn it off for the standalone server's self-signed cert.
 
 ## Development
 

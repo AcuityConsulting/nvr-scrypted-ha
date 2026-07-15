@@ -2,12 +2,8 @@
 
 DOMAIN = "acuity_nvr"
 
-CONF_USE_SSL = "use_ssl"
+CONF_API_TOKEN = "api_token"
 CONF_VERIFY_SSL = "verify_ssl"
-
-DEFAULT_PORT = 10444
-DEFAULT_USE_SSL = True
-DEFAULT_VERIFY_SSL = False
 
 # Seconds between coordinator polls of the NVR API
 UPDATE_INTERVAL_SECONDS = 15
