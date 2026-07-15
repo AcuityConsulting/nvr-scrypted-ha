@@ -1,0 +1,12 @@
+{
+  "domain": "acuity_nvr",
+  "name": "Acuity NVR",
+  "codeowners": ["@escarsega"],
+  "config_flow": true,
+  "dependencies": ["media_source"],
+  "documentation": "https://github.com/escarsega/acuity-nvr-ha",
+  "integration_type": "hub",
+  "iot_class": "local_polling",
+  "requirements": [],
+  "version": "0.1.0"
+}

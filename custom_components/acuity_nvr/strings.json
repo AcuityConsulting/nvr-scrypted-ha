@@ -1,0 +1,29 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Acuity NVR",
+        "description": "Enter the address of the Acuity NVR standalone server (the Scrypted host, port 10444 by default).",
+        "data": {
+          "host": "Host",
+          "port": "Port",
+          "use_ssl": "Use HTTPS",
+          "verify_ssl": "Verify SSL certificate"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach the NVR. Check the host/port and that the standalone server is enabled in the plugin settings."
+    },
+    "abort": {
+      "already_configured": "This NVR is already configured."
+    }
+  },
+  "entity": {
+    "binary_sensor": {
+      "nvr_motion": {
+        "name": "NVR motion"
+      }
+    }
+  }
+}
