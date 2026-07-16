@@ -3,11 +3,11 @@
   "name": "Acuity NVR",
   "codeowners": ["@AcuityConsulting"],
   "config_flow": true,
-  "dependencies": ["media_source"],
+  "dependencies": ["frontend", "media_source"],
   "documentation": "https://github.com/AcuityConsulting/nvr-scrypted-ha",
   "issue_tracker": "https://github.com/AcuityConsulting/nvr-scrypted-ha/issues",
   "integration_type": "hub",
   "iot_class": "local_polling",
   "requirements": [],
-  "version": "0.2.1"
+  "version": "0.3.0"
 }

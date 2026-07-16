@@ -4,6 +4,9 @@ DOMAIN = "acuity_nvr"
 
 CONF_API_TOKEN = "api_token"
 CONF_VERIFY_SSL = "verify_ssl"
+CONF_WEB_UI_URL = "web_ui_url"
+CONF_CREATE_CAMERAS = "create_cameras"
+CONF_CREATE_MOTION = "create_motion_sensors"
 
 # Seconds between coordinator polls of the NVR API
 UPDATE_INTERVAL_SECONDS = 15

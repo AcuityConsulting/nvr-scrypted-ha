@@ -14,8 +14,8 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.util import dt as dt_util
 
-from . import AcuityNvrConfigEntry
-from .const import DOMAIN, MOTION_ACTIVE_WINDOW_SECONDS
+from . import AcuityNvrConfigEntry, get_entry_option
+from .const import CONF_CREATE_MOTION, DOMAIN, MOTION_ACTIVE_WINDOW_SECONDS
 from .coordinator import AcuityNvrCoordinator
 
 
@@ -25,6 +25,11 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up motion sensors, adding new ones as cameras appear on the NVR."""
+    # Optional: native camera integrations (e.g. Reolink) provide push-based
+    # motion sensors, so the NVR's polled ones can be turned off.
+    if not get_entry_option(entry, CONF_CREATE_MOTION, True):
+        return
+
     coordinator = entry.runtime_data
     known_ids: set[str] = set()
 

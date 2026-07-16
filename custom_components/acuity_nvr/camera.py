@@ -11,8 +11,8 @@ from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from . import AcuityNvrConfigEntry
-from .const import DOMAIN
+from . import AcuityNvrConfigEntry, get_entry_option
+from .const import CONF_CREATE_CAMERAS, DOMAIN
 from .coordinator import AcuityNvrCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -24,6 +24,11 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up camera entities, adding new ones as they appear on the NVR."""
+    # Recordings-only mode: cameras may already be provided by a native
+    # integration (e.g. Reolink), so entity creation can be turned off.
+    if not get_entry_option(entry, CONF_CREATE_CAMERAS, True):
+        return
+
     coordinator = entry.runtime_data
     known_ids: set[str] = set()
 

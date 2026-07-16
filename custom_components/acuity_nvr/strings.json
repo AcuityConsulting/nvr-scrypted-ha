@@ -20,6 +20,19 @@
       "already_configured": "This NVR is already configured."
     }
   },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Acuity NVR options",
+        "description": "Set a Web UI URL to add an Acuity NVR panel to the sidebar (embedded in an iframe). Use the standalone server URL with the token, e.g. https://192.168.1.10:10444/?token=YOURTOKEN — and visit it once directly in your browser to accept the self-signed certificate. Turn off camera or motion entities if a native integration (e.g. Reolink) already provides them; the Media Browser recordings keep working either way.",
+        "data": {
+          "web_ui_url": "Web UI URL for the sidebar panel (empty = no panel)",
+          "create_cameras": "Create camera entities",
+          "create_motion_sensors": "Create motion sensors"
+        }
+      }
+    }
+  },
   "entity": {
     "binary_sensor": {
       "nvr_motion": {
