@@ -89,7 +89,7 @@ def _register_web_ui_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
         frontend.async_register_built_in_panel(
             hass,
             "iframe",
-            sidebar_title="Acuity NVR",
+            sidebar_title="NVR",
             sidebar_icon="mdi:cctv",
             frontend_url_path=url_path,
             config={"url": web_ui_url},
