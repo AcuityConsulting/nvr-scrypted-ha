@@ -3,7 +3,7 @@
     "step": {
       "user": {
         "title": "Connect to Acuity NVR",
-        "description": "Enter the NVR URL. Recommended: the token-gated Scrypted endpoint, e.g. `https://scrypted.example.com/endpoint/@acuity/nvr/public` (requires the API Token set in the plugin). Alternative: the standalone server, e.g. `https://<host>:10444` (turn off certificate verification for Scrypted's self-signed cert).",
+        "description": "Enter the NVR URL. Recommended: the token-gated Scrypted endpoint, e.g. https://scrypted.example.com/endpoint/@acuity/nvr/public (requires the API Token from the plugin's Network settings). Alternative: the standalone server, e.g. https://192.168.1.10:10444 (turn off certificate verification for its self-signed cert).",
         "data": {
           "url": "NVR URL",
           "api_token": "API token (from the plugin's Network settings)",
