@@ -41,6 +41,14 @@ STEP_USER_SCHEMA = vol.Schema(
 class AcuityNvrOptionsFlow(OptionsFlow):
     """Options: sidebar web UI panel and which entities to create."""
 
+    def _suggested_web_ui_url(self) -> str:
+        """Current saved URL, or the auto-derived default for new setups."""
+        from . import default_web_ui_url
+
+        if CONF_WEB_UI_URL in self.config_entry.options:
+            return self.config_entry.options[CONF_WEB_UI_URL]
+        return default_web_ui_url(self.config_entry)
+
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
@@ -53,7 +61,7 @@ class AcuityNvrOptionsFlow(OptionsFlow):
                 vol.Optional(
                     CONF_WEB_UI_URL,
                     description={
-                        "suggested_value": options.get(CONF_WEB_UI_URL, "")
+                        "suggested_value": self._suggested_web_ui_url()
                     },
                 ): str,
                 vol.Required(

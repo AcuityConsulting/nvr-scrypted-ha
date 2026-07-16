@@ -17,10 +17,18 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_URL, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import AcuityNvrApi, AcuityNvrApiError
-from .const import CONF_API_TOKEN, CONF_VERIFY_SSL, CONF_WEB_UI_URL, DOMAIN
+from .const import (
+    CONF_API_TOKEN,
+    CONF_CREATE_CAMERAS,
+    CONF_CREATE_MOTION,
+    CONF_VERIFY_SSL,
+    CONF_WEB_UI_URL,
+    DOMAIN,
+)
 from .coordinator import AcuityNvrCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -35,6 +43,20 @@ def get_entry_option(entry: ConfigEntry, key: str, default=None):
     return entry.options.get(key, entry.data.get(key, default))
 
 
+def default_web_ui_url(entry: ConfigEntry) -> str:
+    """Derive the NVR web UI URL from the connection settings.
+
+    The plugin (>= 0.5.4) serves its web UI on both token-auth surfaces
+    (public endpoint and standalone server), so appending ?token= to the
+    configured base URL yields a working, embeddable UI address.
+    """
+    base = (entry.data.get(CONF_URL) or "").rstrip("/")
+    if not base:
+        return ""
+    token = entry.data.get(CONF_API_TOKEN)
+    return f"{base}/?token={token}" if token else f"{base}/"
+
+
 async def _async_update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Reload the entry when options change."""
     await hass.config_entries.async_reload(entry.entry_id)
@@ -46,8 +68,15 @@ def _panel_registry(hass: HomeAssistant) -> dict[str, str]:
 
 
 def _register_web_ui_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
-    """Add a sidebar iframe panel embedding the NVR web UI, if configured."""
-    web_ui_url = (get_entry_option(entry, CONF_WEB_UI_URL) or "").strip()
+    """Add a sidebar iframe panel embedding the NVR web UI.
+
+    Enabled by default using a URL derived from the connection settings;
+    saving an empty Web UI URL in the options disables the panel.
+    """
+    if CONF_WEB_UI_URL in entry.options:
+        web_ui_url = (entry.options[CONF_WEB_UI_URL] or "").strip()
+    else:
+        web_ui_url = default_web_ui_url(entry)
     if not web_ui_url:
         return
 
@@ -79,6 +108,35 @@ def _remove_web_ui_panel(hass: HomeAssistant, entry: ConfigEntry) -> None:
         frontend.async_remove_panel(hass, url_path)
 
 
+def _cleanup_disabled_platforms(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Remove registry entities/devices for platforms the user turned off.
+
+    Without this, unchecking "Create camera entities" / "Create motion
+    sensors" leaves orphaned devices behind in the device registry.
+    """
+    create_cameras = get_entry_option(entry, CONF_CREATE_CAMERAS, True)
+    create_motion = get_entry_option(entry, CONF_CREATE_MOTION, True)
+    if create_cameras and create_motion:
+        return
+
+    entity_registry = er.async_get(hass)
+    for entity in er.async_entries_for_config_entry(entity_registry, entry.entry_id):
+        if (entity.domain == "camera" and not create_cameras) or (
+            entity.domain == "binary_sensor" and not create_motion
+        ):
+            entity_registry.async_remove(entity.entity_id)
+
+    device_registry = dr.async_get(hass)
+    for device in dr.async_entries_for_config_entry(device_registry, entry.entry_id):
+        remaining = er.async_entries_for_device(
+            entity_registry, device.id, include_disabled_entities=True
+        )
+        if not remaining:
+            device_registry.async_update_device(
+                device.id, remove_config_entry_id=entry.entry_id
+            )
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: AcuityNvrConfigEntry) -> bool:
     """Set up Acuity NVR from a config entry."""
     session = async_get_clientsession(
@@ -100,6 +158,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: AcuityNvrConfigEntry) ->
     entry.async_on_unload(entry.add_update_listener(_async_update_listener))
 
     _register_web_ui_panel(hass, entry)
+    _cleanup_disabled_platforms(hass, entry)
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
